@@ -1,0 +1,41 @@
+const int soilSensor = A0;
+const int relayPin = 8;
+
+int soilValue = 0;
+
+const int DRY_VALUE = 600;
+const int WET_VALUE = 400;
+
+bool pumpOn = false;
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(soilSensor, INPUT);
+  pinMode(relayPin, OUTPUT);
+
+  digitalWrite(relayPin, HIGH);
+}
+
+void loop() {
+
+
+  soilValue = analogRead(soilSensor);
+
+  Serial.print("Soil Moisture Value: ");
+  Serial.println(soilValue);
+
+  if (soilValue > DRY_VALUE && !pumpOn) {
+    digitalWrite(relayPin, LOW);
+    pumpOn = true;
+    Serial.println("Soil is DRY - Pump ON");
+  }
+
+  else if (soilValue < WET_VALUE && pumpOn) {
+    digitalWrite(relayPin, HIGH);
+    pumpOn = false;
+    Serial.println("Soil is WET - Pump OFF");
+  }
+
+  delay(1000);
+}
